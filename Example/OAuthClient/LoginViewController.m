@@ -11,7 +11,6 @@
 #import "SocialLoginViewController.h"
 #import "SocialOAuthProvider.h"
 #import "OA2Credentials.h"
-#import "NSURL+Query.h"
 #import "SocialCredentials.h"
 
 typedef enum {
