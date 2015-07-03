@@ -10,6 +10,7 @@
 #import "OA2AuthorizationURLHandler.h"
 
 
-@interface OA2AuthorizationViewController : UIViewController <OA2AuthorizationURLHandler>
-
+@interface OA2AuthorizationViewController : UIViewController <OA2AuthorizationURLHandler,UIWebViewDelegate>
+@property(strong,nonatomic) IBOutlet UIWebView *webView;
+-(void)webviewDidFinishAuthorization;
 @end

@@ -8,9 +8,7 @@
 
 #import "OA2AuthorizationViewController.h"
 
-@interface OA2AuthorizationViewController () <UIWebViewDelegate>
-
-@property(strong,nonatomic) UIWebView *webView;
+@interface OA2AuthorizationViewController () 
 @property(strong,nonatomic) id <OA2Provider> provider;
 @property(copy,nonatomic) OA2AuthorizationSuccess successCallBack;
 @property(copy,nonatomic) OA2AuthorizationError errorCallBack;
@@ -19,37 +17,28 @@
 
 @implementation OA2AuthorizationViewController
 
--(void)loadWebView{
-    _webView = [[UIWebView alloc] init];
-    [_webView setDelegate:self];
-    [_webView setTranslatesAutoresizingMaskIntoConstraints:NO];
-    
-    UIView *parent = [self view];
-    [parent addSubview:_webView];
-    
-    NSLayoutConstraint *leadingWebViewConstraitn = [NSLayoutConstraint constraintWithItem:_webView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:parent attribute:NSLayoutAttributeLeading multiplier:1.0f constant:0];
-    NSLayoutConstraint *topWebViewConstraitn = [NSLayoutConstraint constraintWithItem:_webView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:parent attribute:NSLayoutAttributeTop multiplier:1.0f constant:0];
-    NSLayoutConstraint *trailingWebViewConstraitn = [NSLayoutConstraint constraintWithItem:_webView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:parent attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:0];
-    NSLayoutConstraint *bottomWebViewConstraitn = [NSLayoutConstraint constraintWithItem:_webView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:parent attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0];
-    
-    [parent addConstraints:@[leadingWebViewConstraitn,topWebViewConstraitn,trailingWebViewConstraitn,bottomWebViewConstraitn]];
-}
+//-(void)loadWebView{
+//    _webView = [[UIWebView alloc] init];
+//    [_webView setDelegate:self];
+//    [_webView setTranslatesAutoresizingMaskIntoConstraints:NO];
+//    
+//    UIView *parent = [self view];
+//    [parent addSubview:_webView];
+//    
+//    NSLayoutConstraint *leadingWebViewConstraitn = [NSLayoutConstraint constraintWithItem:_webView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:parent attribute:NSLayoutAttributeLeading multiplier:1.0f constant:0];
+//    NSLayoutConstraint *topWebViewConstraitn = [NSLayoutConstraint constraintWithItem:_webView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:parent attribute:NSLayoutAttributeTop multiplier:1.0f constant:0];
+//    NSLayoutConstraint *trailingWebViewConstraitn = [NSLayoutConstraint constraintWithItem:_webView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:parent attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:0];
+//    NSLayoutConstraint *bottomWebViewConstraitn = [NSLayoutConstraint constraintWithItem:_webView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:parent attribute:NSLayoutAttributeBottom multiplier:1.0f constant:0];
+//    
+//    [parent addConstraints:@[leadingWebViewConstraitn,topWebViewConstraitn,trailingWebViewConstraitn,bottomWebViewConstraitn]];
+//}
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    [self loadWebView];
+    //[self loadWebView];
 }
 
-
--(void)presentViewControllercompletion:(void(^)())completion{
-    [[[[UIApplication sharedApplication] keyWindow] rootViewController] presentViewController:self animated:YES completion:completion];
-}
-
--(void)dismissViewControllerCompletion:(void (^)(void))completion{
-   
-}
-
--(void)stopWebView{
+-(void)webviewDidFinishAuthorization{
     [_webView stopLoading];
     [_webView setDelegate:nil];
 }
@@ -73,14 +62,14 @@
     NSURLRequest *request = [webView request];
     NSURL *requestURL = [request URL];
     if([[requestURL absoluteString] hasPrefix:[[self provider] redirectURLString]]){
-        [self stopWebView];
+        [self webviewDidFinishAuthorization];
         [self successCallBack](requestURL);
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error{
-    [self stopWebView];
+    [self webviewDidFinishAuthorization];
     [self errorCallBack](error);
     [self dismissViewControllerAnimated:YES completion:nil];
 }
