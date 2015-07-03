@@ -9,7 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "OA2Provider.h"
 @interface SocialOAuthProvider : NSObject <OA2Provider>
-@property(strong,nonatomic) NSString *clientToken;
 @property(strong,nonatomic) NSString *name;
 @property(strong,nonatomic) NSString *clientId;
 @property(strong,nonatomic) NSString *redirectURLString;
